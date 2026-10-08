@@ -1,0 +1,29 @@
+@startuml
+title 景点评论爬取时序图
+
+actor 用户
+database "所有景点id" as G
+participant "线程池" as T
+database "携程网" as F
+database "MySQL" as MY
+
+用户 -> G : 获取景点ID
+activate G
+G --> 用户 : 返回景点ID列表
+deactivate G
+
+用户 -> T : 创建线程池
+activate T
+loop 每个景点ID
+   用户 -> T : 提交任务(fetch_data)
+    activate F
+    F -> F : 获取数据
+    F -> F : 处理数据
+    activate MY
+    F -> MY : 保存数据
+    deactivate MY
+    deactivate F
+end
+T --> 用户 : 所有线程完成
+deactivate T
+@enduml

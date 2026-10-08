@@ -1,0 +1,36 @@
+
+@startuml
+
+title 商家路线分析词云图
+actor 用户
+participant DataFrame as df
+participant jieba
+participant move_stopwords
+participant Counter
+activate 用户
+activate df
+用户 -> df: 传入DataFrame
+df --> 用户: DataFrame
+
+用户 -> df: 提取'title'、'feature'和'descInfo'列文本
+df --> 用户: 文本字符串
+deactivate df
+
+activate jieba
+用户 -> jieba: 中文分词（paddle模式）
+jieba --> 用户: 分词结果
+deactivate jieba
+
+activate move_stopwords
+用户 -> move_stopwords: 移除停用词
+move_stopwords --> 用户: 净化后的分词结果
+deactivate move_stopwords
+
+activate Counter
+用户 -> Counter: 统计词频
+Counter --> 用户: 词频结果
+deactivate Counter
+deactivate 用户
+
+
+@enduml

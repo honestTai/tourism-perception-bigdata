@@ -1,0 +1,42 @@
+@startuml
+
+title 评论情感分析
+actor 用户
+participant 数据库引擎 as engine
+participant 数据框 as df
+participant SnowNLP
+participant CommentWord
+activate 用户
+用户 -> engine: 执行 SQL 查询
+activate engine
+engine --> 用户: 返回评论数据
+deactivate engine
+
+activate df
+用户 -> df: 读取评论数据
+df --> 用户: 获取评论数据的数据框
+
+
+用户 -> df: 过滤空白评论
+df --> 用户: 过滤后的数据框
+
+
+用户 -> df: 分组评论数据
+df --> 用户: 分组后的数据
+
+
+用户 -> SnowNLP: 情感分析计算评论得分
+activate SnowNLP
+SnowNLP --> 用户: 情感分析得分
+
+用户 -> 用户: 根据得分将评论分为积极、中立和消极
+
+用户 -> CommentWord: 获取评论词云图数据
+activate CommentWord
+CommentWord --> 用户: 词云图数据
+deactivate CommentWord
+
+用户 -> 用户: 统计积极、中立和消极评论数量
+
+
+@enduml

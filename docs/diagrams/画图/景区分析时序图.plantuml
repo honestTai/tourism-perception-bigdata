@@ -1,0 +1,30 @@
+@startuml
+title 景区分析时序图
+actor User
+activate User
+User -> getAtt: 调用getAtt方法
+activate getAtt
+activate param
+getAtt -> param: 检查param是否为空字典
+alt param为空
+  getAtt <-- result:返回空
+else param非空
+  getAtt -> param: 获取attId的值
+  alt attId存在且非空
+    activate engine
+    getAtt -> engine: 构建SQL查询语句
+    getAtt <-- df: 使用pandas执行查询，获取数据
+    getAtt -> df: 出行分类分组
+    getAtt -> df: 评分数据处理
+    getAtt -> df: IP数据处理
+    getAtt -> df: 用户数据处理
+    getAtt -> df: 评论数据处理
+    getAtt <-- result: 返回处理后的结果
+    deactivate engine
+  else attId不存在或为空
+    getAtt <-- result:返回空
+  end
+end
+deactivate getAtt
+deactivate User
+@enduml

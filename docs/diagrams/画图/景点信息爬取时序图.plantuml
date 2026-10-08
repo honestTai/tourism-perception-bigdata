@@ -1,0 +1,26 @@
+@startuml
+title 景点信息爬取时序图
+
+actor 用户
+entity "get_attraction_info函数" as get_info
+database "携程网" as ctrip
+database "MySQL数据库" as mysql
+
+用户 -> get_info: 初始化cargetId列表
+activate get_info
+
+loop 对每个cargetId
+    get_info -> ctrip: 发送HTTP请求
+    activate ctrip
+    ctrip --> get_info: 返回HTML页面
+    deactivate ctrip
+    get_info -> get_info: 解析HTML并提取信息
+    get_info -> mysql: 存储提取的数据
+    activate mysql
+    mysql --> get_info: 数据存储成功
+    deactivate mysql
+    note over get_info: 10秒延迟
+end
+
+deactivate get_info
+@enduml

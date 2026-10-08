@@ -1,0 +1,30 @@
+@startuml
+title 商家路线爬取时序图
+actor main as "用户"
+participant fetch_data as "fetch_data(page)"
+participant ThreadPoolExecutor as "ThreadPoolExecutor"
+
+main -> ThreadPoolExecutor: 创建线程池\n(max_workers=5)
+activate ThreadPoolExecutor
+
+loop for each page in range(1, 18)
+    ThreadPoolExecutor -> fetch_data: 提交任务\n(fetch_data, str(page))
+    activate fetch_data
+    fetch_data -> requests.post: 发送API请求
+    alt 请求成功
+        requests.post --> fetch_data: 返回API数据
+        fetch_data -> JSON解析: 解析JSON数据
+        JSON解析 --> fetch_data: 解析结果
+        fetch_data -> pandas.DataFrame: 将数据转换为DataFrame
+        pandas.DataFrame -> engine: 保存数据到数据库
+        engine --> fetch_data: 数据保存成功
+        fetch_data -> main: 打印保存成功信息
+    else 请求失败
+        fetch_data -> main: 打印请求失败信息
+    end
+    deactivate fetch_data
+end
+
+ThreadPoolExecutor --> main: 所有线程执行完毕
+deactivate ThreadPoolExecutor
+@enduml

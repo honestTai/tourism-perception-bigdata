@@ -1,0 +1,32 @@
+@startuml
+title "评论数据聚类分析时序图"
+
+actor User
+database Database
+participant "数据准备" as DataPreparation
+participant "文本特征处理" as TextFeatureProcessing
+participant "TF-IDF向量化" as TFIDFVectorization
+participant "数据标准化" as DataNormalization
+participant "K均值聚类" as KMeansClustering
+participant "地域信息解析" as RegionParsing
+participant "评分占比计算" as ScorePercentageCalculation
+participant "输出统计信息" as OutputStatistics
+participant "绘制散点图" as ScatterPlotDrawing
+participant "绘制图表" as OverallPlotDrawing
+
+User -> DataPreparation: 评论数据请求
+DataPreparation -> Database: 读取评论数据
+DataPreparation -> TextFeatureProcessing: 选择文本特征，合并为一个文本特征列
+TextFeatureProcessing -> TFIDFVectorization: TF-IDF向量化
+TFIDFVectorization -> DataNormalization: 数据标准化
+DataNormalization -> KMeansClustering: K均值聚类
+KMeansClustering -> RegionParsing: 地域信息解析
+RegionParsing -> ScorePercentageCalculation: 计算评分占比
+ScorePercentageCalculation -> OutputStatistics: 输出统计信息
+OutputStatistics -> User: 输出每个聚类的评论数量和评分占比
+User -> ScatterPlotDrawing: 绘制散点图请求
+ScatterPlotDrawing -> User: 散点图绘制完成
+User -> OverallPlotDrawing: 绘制整体图表请求
+OverallPlotDrawing -> User: 整体图表绘制完成
+
+@enduml

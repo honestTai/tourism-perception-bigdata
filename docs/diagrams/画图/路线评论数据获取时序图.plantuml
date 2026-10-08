@@ -1,0 +1,36 @@
+@startuml
+title 商家路线评论获取时序图
+actor main as "用户"
+participant fetch_data as "fetch_data(poiId, page)"
+participant get_attIds as "get_attIds()"
+database engine as "数据库: MySQL"
+
+main -> get_attIds: 获取attIds
+activate get_attIds
+get_attIds -> engine: 查询buying表
+engine --> get_attIds: 返回attIds
+deactivate get_attIds
+
+main -> ThreadPoolExecutor: 提交fetch_data任务
+activate ThreadPoolExecutor
+loop 对于每个attId in attIds
+    ThreadPoolExecutor -> fetch_data: 提交(fetch_data, attId, 1)
+end
+deactivate ThreadPoolExecutor
+
+activate fetch_data
+fetch_data -> requests.post: 发送API请求
+requests.post --> fetch_data: 接收API响应
+fetch_data -> JSON解析: 解析JSON响应
+JSON解析 --> fetch_data: 解析后的数据
+alt Ack是成功的
+    fetch_data -> 创建DataFrame: 从数据创建DataFrame
+    创建DataFrame -> engine: 将数据保存到'comment'表
+    engine --> 创建DataFrame: 数据保存成功
+else Ack不是成功的
+    fetch_data -> main: 打印'请求失败'
+end
+deactivate fetch_data
+
+main --> main: 针对每个attId循环
+@enduml

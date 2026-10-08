@@ -1,0 +1,38 @@
+@startuml
+title 偏好分析
+actor 用户
+activate 用户
+用户 -> Database: 获取数据
+activate Database
+
+Database -> DataFilter: 筛选完整信息记录
+activate DataFilter
+
+DataFilter -> DataFilter: 筛选出行次数大于50的数据
+DataFilter -> WordCloud: 提取特点关键词
+activate WordCloud
+
+WordCloud -> WordCloud: 分词、统计词频
+WordCloud -> WordCloud: 获取前200个关键词
+WordCloud --> DataFilter: 返回特点关键词
+
+deactivate WordCloud
+
+DataFilter -> WordCloud: 提取标题关键词
+activate WordCloud
+
+WordCloud -> WordCloud: 分词、去停用词、统计词频
+WordCloud -> WordCloud: 获取前200个关键词
+WordCloud --> DataFilter: 返回标题关键词
+
+deactivate WordCloud
+
+DataFilter -> DataFilter: 获取价格与出行次数数组
+DataFilter -> DataFilter: 获取价格与评分数组
+
+DataFilter --> Database: 返回结果
+deactivate DataFilter
+
+Database --> 用户: 返回结果
+deactivate Database
+@enduml

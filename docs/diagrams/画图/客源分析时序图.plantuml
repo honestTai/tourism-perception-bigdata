@@ -1,0 +1,46 @@
+@startuml
+
+title 客源分析时序图
+actor 用户
+participant 数据库引擎 as engine
+participant 数据框 as df
+participant MapPieDataFromDataFrame
+participant MapWCDataFromDataFrame
+
+用户 -> engine: 执行 SQL 查询
+activate engine
+activate 用户
+engine --> 用户: 返回评论数据
+deactivate engine
+
+activate df
+用户 -> df: 读取评论数据
+df --> 用户: 获取评论数据的数据框
+
+用户 -> df: 遍历省份获取客源信息
+df --> 用户: 数据框
+
+用户 -> df: 遍历省份
+df --> 用户: 省份名称
+
+用户 -> df: 获取省份对应的评论数据
+df --> 用户: 省份的评论数据
+
+用户 -> df: 获取省份的显示名称和评论总量
+df --> 用户: 显示名称和评论总量
+deactivate df
+
+activate MapPieDataFromDataFrame
+用户 -> MapPieDataFromDataFrame: 生成地图饼图数据
+MapPieDataFromDataFrame --> 用户: 地图饼图数据
+deactivate MapPieDataFromDataFrame
+
+activate MapWCDataFromDataFrame
+用户 -> MapWCDataFromDataFrame: 生成词云图数据
+MapWCDataFromDataFrame --> 用户: 词云图数据
+deactivate MapWCDataFromDataFrame
+
+用户 -> 用户: 将省份信息添加到列表 d 和 province_data
+
+
+@enduml

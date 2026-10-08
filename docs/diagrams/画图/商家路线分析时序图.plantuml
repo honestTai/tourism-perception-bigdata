@@ -1,0 +1,40 @@
+' @startuml
+' title 商家路线分析
+' actor User
+' participant Engine
+' participant DataFrame as df
+' database Buying
+' activate Engine
+' activate User
+' User -> Engine: 执行 SQL 查询
+' activate Buying
+' Engine -> Buying: SELECT * FROM buying WHERE score IS NOT NULL ORDER BY score DESC
+' Buying --> Engine: 返回数据
+' deactivate Buying
+' activate df
+' Engine --> df: 数据转换成DF
+
+
+' User -> df: 统计高低得分商家数量
+' df -> df: 将 'score' 列转换为数值类型
+' df -> df: 过滤高分和低分商家
+' df --> User: 返回高分和低分商家数量
+' ' deactivate DataFrame
+' ' activate DataFrame
+' User -> df: 计算商家总数
+' df --> User: 返回商家总数
+' ' deactivate DataFrame
+' ' activate DataFrame
+' User -> df: 计算3分商家占比
+' User -> df: 计算4分商家占比
+' df --> User: 返回占比
+' deactivate df
+' User -> Engine: 组装结果
+
+' Engine --> User: 返回结果
+' deactivate Engine
+' deactivate User
+' @enduml
+
+
+

@@ -1,0 +1,26 @@
+// sidebar
+$menuText:#bfcbd9;//普通按钮字体颜色
+$menuActiveText:#409EFF;//选择模块的字体颜色#F56C6C
+$subMenuActiveText:#f4f4f5; //选中模块父级按钮字体颜色#E6A23C
+
+$menuBg:#304156;//菜单的整体背景色
+$menuHover:#263445;//菜单悬浮变色
+
+$subMenuBg:#1f2d3d;//子菜单背景色
+$subMenuHover:#001528;//子菜单悬浮背景色
+
+$sideBarWidth: 210px; //侧边栏的宽度
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
+
